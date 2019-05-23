@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet, Picker, AppState } from "react-native";
 
+import PushNotification from "react-native-push-notification";
+import PushController from "./PushController";
+
 export class Home extends Component {
   constructor(props) {
     super(props);
@@ -19,7 +22,12 @@ export class Home extends Component {
   };
   handleAppStateChange = nextAppState => {
     if (nextAppState === "background") {
-      console.log("App is in background now!", this.state.seconds);
+      PushNotification.localNotificationSchedule({
+        //... You can use all the options from localNotifications
+        title: "New notification from myApp",
+        message: "Hello, this is a background notification!", // (required)
+        date: new Date(Date.now() + this.state.seconds * 1000) // in 60 secs
+      });
     }
   };
   render() {
@@ -40,6 +48,7 @@ export class Home extends Component {
           <Picker.Item label="25" value={25} />
           <Picker.Item label="30" value={30} />
         </Picker>
+        <PushController />
       </View>
     );
   }
